@@ -1,10 +1,12 @@
 # dependencies
 import os
+from glob import glob
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import scipy.stats as stats
 from itertools import combinations
-from stats import vertex_eudist
+from stats_helper import vertex_eudist
 
 sns.set(style='white')
 
@@ -91,3 +93,76 @@ def desc_plots(sub_list, nsd_dir):
         plt.close()
         print(f'{sub_name} done!')
     print('finished')
+    
+    
+def curv_diff_plots(sub_list):
+    '''
+    curv_diff() plot differences in curvature for each run combination within a subject for a given subject list.
+    Uses interpolated curvature values obtained via sub_curv_extract() from curvature_extract.py
+    '''
+    subs = sub_list
+    for snum in subs:
+        print(f'subject {snum} plotting started')
+        # load curvatures
+        run_list_lh = glob(os.path.join('./sub_curvatures', f'subj0{snum}*lh.csv'))
+        run_list_rh = glob(os.path.join('./sub_curvatures', f'subj0{snum}*rh.csv'))
+        # generate pairwise labels
+        label_range = list(range(1,len(run_list_lh)+1))
+        label_combo = list(combinations(label_range, 2))
+        labels=[]
+        for i in range(0,len(label_combo)):
+            labels.append(str(label_combo[i][0])+'v'+str(label_combo[i][1]))
+        c = 0
+        
+        # left hemi
+        for run1, run2 in combinations(run_list_lh, 2):
+            # fetch run names
+            run1_name = 'run'+labels[c][0]
+            run2_name = 'run'+labels[c][2]
+            #load curvatures
+            curv1_lh = np.loadtxt(run1)
+            curv2_lh = np.loadtxt(run2)
+            r, p = stats.pearsonr(curv1_lh, curv2_lh)
+
+            # save plot
+            if not os.path.exists('curv_diff_plots'):
+                os. makedirs('curv_diff_plots')
+            g = sns.jointplot(x=curv1_lh,y=curv2_lh, kind="reg")
+            g.set_axis_labels(run1_name, run2_name)
+            plt.suptitle(f'subj0{snum} LH')
+            regline = g.ax_joint.get_lines()[0]
+            regline.set_color('red')
+            regline.set_zorder(5)
+            g.ax_marg_x.set_xlim(-3, 3)
+            g.ax_marg_y.set_ylim(-3, 3)
+            g.ax_joint.annotate(f'$\\rho = {r:.3f}, p = {p:.3f}$', xy=(-2, 2))
+            g.savefig(f'./curv_diff_plots/subj0{snum}_{labels[c]}_lh.png')
+            plt.close()
+            c += 1
+        # right hemi
+        c = 0
+        for run1, run2 in combinations(run_list_rh, 2):
+            # fetch run names
+            run1_name = 'run'+labels[c][0]
+            run2_name = 'run'+labels[c][2]
+            #load curvatures
+            curv1_rh = np.loadtxt(run1)
+            curv2_rh = np.loadtxt(run2)
+            r, p = stats.pearsonr(curv1_rh, curv2_rh)
+
+            # save plot
+            if not os.path.exists('curv_diff_plots'):
+                os. makedirs('curv_diff_plots')
+            g = sns.jointplot(x=curv1_rh,y=curv2_rh, kind="reg")
+            g.set_axis_labels(run1_name, run2_name)
+            plt.suptitle(f'subj0{snum} RH')
+            regline = g.ax_joint.get_lines()[0]
+            regline.set_color('red')
+            regline.set_zorder(5)
+            g.ax_marg_x.set_xlim(-3, 3)
+            g.ax_marg_y.set_ylim(-3, 3)
+            g.ax_joint.annotate(f'$\\rho = {r:.3f}, p = {p:.3f}$', xy=(-2, 2))
+            g.savefig(f'./curv_diff_plots/subj0{snum}_{labels[c]}_rh.png')
+            plt.close()
+            c += 1
+    print(f'all subjsects plotting finished')
