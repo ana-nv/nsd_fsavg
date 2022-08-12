@@ -10,8 +10,7 @@ from stats_helper import vertex_eudist
 
 sns.set(style='white')
 
-def desc_plots(sub_list, nsd_dir):
-    subs = sub_list
+def desc_plots(subs, nsd_dir):
     
     for snum in subs:
         sub_name = 'subj0'+ str(snum)
@@ -95,16 +94,15 @@ def desc_plots(sub_list, nsd_dir):
     print('finished')
     
     
-def curv_diff_plots(sub_list, sub_curv_path='./sub_curvatures'):
+def curv_diff_plots(subs, sub_curv_path='./sub_curvatures'):
     '''
     Plot differences in curvature for each run combination within a subject for a given subject list.
     Uses interpolated curvature values obtained via sub_curv_extract() from curvature_extract.py
     Parameters:
-    sub_list: list, contains integers of subjects to loop through (1 to 8)
+    subs: list, contains integers of subjects to loop through (1 to 8)
     Optional:
     sub_curv_path: str, (default: './sub_curvatures'), path containing files with subject curvature values
     '''
-    subs = sub_list
     for snum in subs:
         print(f'subject {snum} plotting started')
         # load curvatures
