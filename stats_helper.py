@@ -5,14 +5,14 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from itertools import combinations
 
-def vertex_eudist(snum, sub_coords_path='./sub_coords'):
+def vertex_eudist(snum, sub_coords_path='../sub_coords'):
     '''
     Calculates euclidean distance between the xyz vertex positions in pairwise run comparisons for a given subject.
     Returns two numpy arrays for the subject (left and right hemi) with each pairwise difference in d (mm) and a list of pairwise labels
     Parameters:
     snum: int, subject number
     Optional:
-    sub_coords_path: str (default: './sub_coords'), path containing files with subject vertex coordinates (in fsaverage space)
+    sub_coords_path: str (default: '../sub_coords'), path containing files with subject vertex coordinates (in fsaverage space)
     '''
     # load and reshape the data
     sub_name = 'subj0'+ str(snum) + '_all_'
