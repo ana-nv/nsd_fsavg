@@ -17,7 +17,7 @@ subs = ny.data['benson_winawer_2018'].subjects
 ```
 
 ### How to use the modules
-Fsaverage vertex coordinates are in this repo (fsa_coords).\
+Fsaverage vertex coordinates are in this repo (*fsa_coords*).\
 Vertex coordinates for all subjects can be downloaded from the [OSF project storage](https://osf.io/t6fph/?view_only=e5428abd0da84b4f92e89bbf30bd26aa)\
 Otherwise, they can be calculated:
 ```
@@ -25,7 +25,7 @@ from coords_extract import fsa_coords_extract, sub_coords_extract
 fsa_coords_extract(fsa)
 sub_coords_extract(sublist, nsd_dir)
 ```
-Likewise, curvature values for each subject are already available within this repo.\
+Likewise, curvature values for each subject are already available within this repo (*sub_curvatures*).\
 They be also calculated:
 ```
 from curvature_extract import sub_curv_extract
