@@ -3,7 +3,7 @@ import neuropythy as ny
 import numpy as np
 from glob import glob
 
-def sub_coords_extract(sublist):
+def sub_coords_extract(sublist, nsd_dir='../nsddata_other/freesurferoriginals'):
     for snum in sublist:
         print(f'subject {snum} started')
         sub_name = 'subj0'+ str(snum) + '_rep'
@@ -11,11 +11,9 @@ def sub_coords_extract(sublist):
         fsa_coords_rh = np.loadtxt('./fsa_coords_rh.csv', delimiter=',')
         sub_all_lh = None
         sub_all_rh = None
-        # source path of NSD data
-        nsd_path_pf = '/home/jovyan/shared/NSD/nsddata_other/freesurferoriginals'
         
-        for rep in glob(os.path.join(nsd_path_pf, f'{sub_name}*')):
-                sub = ny.freesurfer_subject(os.path.join(nsd_path_pf, rep))
+        for rep in glob(os.path.join(nsd_dir, f'{sub_name}*')):
+                sub = ny.freesurfer_subject(os.path.join(nsd_dir, rep))
                 sub_sphere_lh = sub.lh.surface('fsaverage')
                 sub_addresses_lh = sub_sphere_lh.address(fsa_coords_lh)
                 sub_unaddresses_lh = sub.lh.surface('white').unaddress(sub_addresses_lh)
@@ -36,16 +34,16 @@ def sub_coords_extract(sublist):
                 del sub, sub_sphere_rh, sub_addresses_rh, sub_unaddresses_rh
                 print("rh done")
 
-                ny.freesurfer.forget_subject(os.path.join(nsd_path_pf, rep))
+                ny.freesurfer.forget_subject(os.path.join(nsd_dir, rep))
                 
-        np.savetxt(os.path.join('./sub_coords', f'subj0{snum}_all_lh.csv'), sub_all_lh, delimiter=',')
-        np.savetxt(os.path.join('./sub_coords', f'subj0{snum}_all_rh.csv'), sub_all_rh, delimiter=',')
+        np.savetxt(os.path.join('../sub_coords', f'subj0{snum}_all_lh.csv'), sub_all_lh, delimiter=',')
+        np.savetxt(os.path.join('../sub_coords', f'subj0{snum}_all_rh.csv'), sub_all_rh, delimiter=',')
         print(f'all subject {snum} runs done')
 
         
-def fsa_coords_extract():
+def fsa_coords_extract(fsa_path='../fsaverage'):
         # source path of fsaverage data
-        fsa = ny.freesurfer_subject('~/mne_data/MNE-fsaverage-data/fsaverage/')
+        fsa = ny.freesurfer_subject(fsa_path)
         
         fsa_sphere_lh = fsa.lh.surface('sphere')
         fsa_coords_lh = fsa_sphere_lh.coordinates
