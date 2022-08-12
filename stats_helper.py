@@ -5,16 +5,20 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from itertools import combinations
 
-def vertex_eudist(snum):
+def vertex_eudist(snum, sub_coords_path='./sub_coords'):
     '''
-    vertex_eudist() calculates euclidean distance between the xyz vertex positions in pairwise run comparisons for a given subject
-    Returns two numpy arrays for the subject (left and right hemi) with each pairwise difference in d (mm) and a list of pairwise names
+    Calculates euclidean distance between the xyz vertex positions in pairwise run comparisons for a given subject.
+    Returns two numpy arrays for the subject (left and right hemi) with each pairwise difference in d (mm) and a list of pairwise labels
+    Parameters:
+    snum: int, subject number
+    Optional:
+    sub_coords_path: str (default: './sub_coords'), path containing files with subject vertex coordinates (in fsaverage space)
     '''
     # load and reshape the data
     sub_name = 'subj0'+ str(snum) + '_all_'
-    sub_all_lh = np.loadtxt(f'./sub_coords/{sub_name}lh.csv', delimiter=',')
+    sub_all_lh = np.loadtxt(os.path.join(sub_coords_path, f'{sub_name}lh.csv'), delimiter=',')
     sub_all_lh = np.reshape(sub_all_lh, (int(len(sub_all_lh)/3),3,-1))
-    sub_all_rh = np.loadtxt(f'./sub_coords/{sub_name}rh.csv', delimiter=',')
+    sub_all_rh = np.loadtxt(os.path.join(sub_coords_path, f'{sub_name}rh.csv'), delimiter=',')
     sub_all_rh = np.reshape(sub_all_rh, (int(len(sub_all_rh)/3),3,-1))
     
     # calculate distance
