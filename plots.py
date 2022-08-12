@@ -95,17 +95,21 @@ def desc_plots(sub_list, nsd_dir):
     print('finished')
     
     
-def curv_diff_plots(sub_list):
+def curv_diff_plots(sub_list, sub_curv_path='./sub_curvatures'):
     '''
-    curv_diff() plot differences in curvature for each run combination within a subject for a given subject list.
+    Plot differences in curvature for each run combination within a subject for a given subject list.
     Uses interpolated curvature values obtained via sub_curv_extract() from curvature_extract.py
+    Parameters:
+    sub_list: list, contains integers of subjects to loop through (1 to 8)
+    Optional:
+    sub_curv_path: str, (default: './sub_curvatures'), path containing files with subject curvature values
     '''
     subs = sub_list
     for snum in subs:
         print(f'subject {snum} plotting started')
         # load curvatures
-        run_list_lh = glob(os.path.join('./sub_curvatures', f'subj0{snum}*lh.csv'))
-        run_list_rh = glob(os.path.join('./sub_curvatures', f'subj0{snum}*rh.csv'))
+        run_list_lh = glob(os.path.join(sub_curv_path, f'subj0{snum}*lh.csv'))
+        run_list_rh = glob(os.path.join(sub_curv_path, f'subj0{snum}*rh.csv'))
         # generate pairwise labels
         label_range = list(range(1,len(run_list_lh)+1))
         label_combo = list(combinations(label_range, 2))
